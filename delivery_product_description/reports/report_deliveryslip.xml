@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_delivery_document_inherit_description"
+              inherit_id="stock.report_delivery_document">
+
+        <!-- 1) إضافة عمود Description في الهيدر -->
+        <xpath expr="//table[contains(@class,'table')]/thead/tr/th[1]" position="after">
+            <th>Description</th>
+        </xpath>
+
+        <!-- 2) إضافة الخلية: نحاول نلقط المتغير الصحيح داخل loop -->
+        <!-- في تقارير أودو غالبًا السطر في tbody مربوط بـ move -->
+        <xpath expr="//table[contains(@class,'table')]/tbody/tr/td[1]" position="after">
+            <td>
+                <!-- لو المتغير move موجود -->
+                <t t-if="move">
+                    <span t-esc="move.sale_description"/>
+                </t>
+
+                <!-- لو المتغير line موجود -->
+                <t t-elif="line">
+                    <span t-esc="line.sale_description"/>
+                </t>
+
+                <!-- fallback: حاول من product مباشرة -->
+                <t t-else="">
+                    <span t-esc="(product and (product.description_sale or '')) or ''"/>
+                </t>
+            </td>
+        </xpath>
+
+    </template>
+
+</odoo>
